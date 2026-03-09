@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3>Book {{ bench.name }}</h3>
+
+<form method="POST" action="{% url 'confirm_booking' %}">
+{% csrf_token %}
+
+<input type="hidden" name="bench_id" value="{{ bench.id }}">
+
+<div class="mb-3">
+<label>Date</label>
+<input type="date" name="date" id="date" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Start Time</label>
+<input type="time" name="start_time" id="start_time" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>End Time</label>
+<input type="time" name="end_time" id="end_time" class="form-control" required>
+</div>
+
+<button type="button" class="btn btn-info" onclick="checkAvailability()">
+Check Availability
+</button>
+
+<div id="result"></div>
+
+<button type="submit" id="bookBtn" class="btn btn-success mt-3" style="display:none">
+Confirm Booking
+</button>
+
+</form>
+
+<script>
+
+function checkAvailability(){
+
+let date = document.getElementById("date").value
+let start = document.getElementById("start_time").value
+let end = document.getElementById("end_time").value
+let bench = "{{ bench.id }}"
+
+fetch(`/benches/check-availability/?bench_id=${bench}&start=${start}&end=${end}&date=${date}`)
+
+.then(response => response.json())
+
+.then(data => {
+
+let result = document.getElementById("result")
+
+if(data.available){
+
+result.innerHTML = "<div class='alert alert-success'>Bench Available</div>"
+document.getElementById("bookBtn").style.display="block"
+
+}else{
+
+result.innerHTML = "<div class='alert alert-danger'>Bench Already Booked</div>"
+document.getElementById("bookBtn").style.display="none"
+
+}
+
+})
+
+}
+
+</script>
+
+{% endblock %}

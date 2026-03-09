@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+<div class="card shadow-sm">
+
+<div class="card-header bg-primary text-white">
+<h3 class="mb-0">📝 Bench Booking</h3>
+</div>
+
+<div class="card-body">
+
+<form method="GET" action="{% url 'available_benches' %}">
+
+<div class="mb-3">
+<label class="form-label">📅 Date</label>
+<input type="date" name="date" class="form-control" required>
+</div>
+
+<h5 class="mt-4">⏱ Start Time</h5>
+
+<div class="row">
+
+<div class="col-md-4">
+<label>EST (Input)</label>
+<input type="time" id="start_est" name="start_time" class="form-control" required>
+<small id="start_est_ampm"></small>
+</div>
+<div class="col-md-4">
+<label>IST</label>
+<input type="text" id="start_ist" class="form-control" readonly>
+</div>
+
+<div class="col-md-4">
+<label>Brazil</label>
+<input type="text" id="start_brazil" class="form-control" readonly>
+</div>
+
+
+</div>
+
+<h5 class="mt-4">⏱ End Time</h5>
+
+<div class="row">
+
+<div class="col-md-4">
+<label>EST (Input)</label>
+<input type="time" id="end_est" name="end_time" class="form-control" required>
+<small id="end_est_ampm"></small>
+</div>
+<div class="col-md-4">
+<label>IST</label>
+<input type="text" id="end_ist" class="form-control" readonly>
+</div>
+
+<div class="col-md-4">
+<label>Brazil</label>
+<input type="text" id="end_brazil" class="form-control" readonly>
+</div>
+
+
+
+</div>
+
+<button type="submit" class="btn btn-success mt-4">
+✅ Check Availability
+</button>
+
+</form>
+
+</div>
+</div>
+</div>
+
+<script>
+
+function formatAMPM(minutes){
+
+minutes = (minutes + 1440) % 1440;
+
+let hr = Math.floor(minutes / 60);
+let min = minutes % 60;
+
+let ampm = hr >= 12 ? "PM" : "AM";
+
+hr = hr % 12;
+hr = hr ? hr : 12;
+
+return `${hr.toString().padStart(2,'0')}:${min.toString().padStart(2,'0')} ${ampm}`;
+}
+
+function convertFromEST(timeValue, estField, brazilField, istField){
+
+if(!timeValue) return;
+
+let [h,m] = timeValue.split(":").map(Number);
+
+let totalMinutes = h*60 + m;
+
+// offsets
+let brazilMinutes = totalMinutes + 120;
+let istMinutes = totalMinutes + 630;
+
+// display EST AM/PM
+document.getElementById(estField).innerText = formatAMPM(totalMinutes);
+
+// display Brazil
+document.getElementById(brazilField).value = formatAMPM(brazilMinutes);
+
+// display IST
+document.getElementById(istField).value = formatAMPM(istMinutes);
+
+}
+
+document.getElementById("start_est").addEventListener("input",function(){
+convertFromEST(this.value,"start_est_ampm","start_brazil","start_ist");
+});
+
+document.getElementById("end_est").addEventListener("input",function(){
+convertFromEST(this.value,"end_est_ampm","end_brazil","end_ist");
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">🏷 Bench List</h3> <!-- kept label emoji subtle -->
+    </div>
+    <div class="mb-3">
+        <a href="{% url 'recently_booked_benches' %}" class="btn btn-info">
+            ⏲ Recently Booked
+        </a>
+    </div>
+    <!-- Filter by IPN Variant -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label for="ipn_filter" class="form-label">Filter by IPN Variant:</label>
+                    <select id="ipn_filter" name="ipn" class="form-select">
+                        <option value="">All</option>
+                        {% for ipn in ipn_choices %}
+                            <option value="{{ ipn.0 }}" {% if ipn.0 == selected_ipn %}selected{% endif %}>
+                                {{ ipn.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mt-4">Filter 🔍</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bench Table -->
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-primary text-white">
+            📄 Bench Information
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover table-bordered align-middle">
+
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>Bench Name</th>
+                            <th>IPN Variant</th>
+                            <th>Last User</th>
+                            <th>Last Session End</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in bench_data %}
+                        <tr class="text-center">
+                            <td>{{ item.bench.name }}</td>
+                            <td>{{ item.bench.IPN_VARIANT }}</td>
+                            <td>{{ item.last_user }}</td>
+                            <td>
+                                {% if item.last_exit != "-" %}
+                                    {{ item.last_exit|date:"M d, Y H:i:s" }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">
+                                ⚠ No benches available
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

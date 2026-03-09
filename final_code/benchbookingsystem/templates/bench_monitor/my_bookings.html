@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h2 class="mb-4">📅 My Bookings</h2>
+
+```
+{% if bookings %}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Bench 🧬</th>
+                <th>Slot ⏰</th>
+                <th>Date 🗓</th>
+                <th>Status 🔔</th>
+                <th>Action 🔧</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.bench.name }}</td>
+                <td>{{ booking.slot.start_time }} - {{ booking.slot.end_time }}</td>
+                <td>{{ booking.date }}</td>
+                <td>
+                    {% if booking.status == "upcoming" %}
+                    <span class="badge bg-warning text-dark">🕐 Upcoming</span>
+                    {% elif booking.status == "running" %}
+                    <span class="badge bg-success">🌟 Running</span>
+                    {% elif booking.status == "cancelled" %}
+                    <span class="badge bg-danger">❌ Cancelled</span>
+                    {% elif booking.status == "completed" %}
+                    <span class="badge bg-secondary">✔ Completed</span>
+                    {% elif booking.status == "missed" %}
+                    <span class="badge bg-danger">⚠ Missed</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if booking.status == "upcoming" %}
+                    <a href="{% url 'connect_bench' booking.id %}" class="btn btn-primary btn-sm me-2">🔗 Connect</a>
+                    <form method="POST" action="{% url 'cancel_booking' booking.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button class="btn btn-danger btn-sm">❌ Cancel</button>
+                    </form>
+                    {% elif booking.status == "running" %}
+                    <a href="{% url 'monitor_page' booking.id %}" class="btn btn-success btn-sm">🛡 View Session</a>
+                    {% elif booking.status == "cancelled" %}
+                    <span class="text-danger">❌ Cancelled</span>
+                    {% elif booking.status == "completed" %}
+                    <span class="text-muted">✔ Finished</span>
+                    {% elif booking.status == "missed" %}
+                    <span class="text-danger">⚠ Missed Appointment</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info d-flex align-items-center" role="alert">
+    <span class="me-2">🚧</span>
+    <div>You have no bookings yet.</div>
+</div>
+{% endif %}
+```
+
+</div>
+
+{% endblock %}

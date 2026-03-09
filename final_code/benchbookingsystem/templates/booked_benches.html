@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3 class="mb-4">Booked Benches</h3>
+
+<table class="table table-bordered table-striped">
+
+<thead class="table-dark">
+<tr>
+<th>Bench</th>
+<th>IPN Variant</th>
+<th>Booked By</th>
+<th>Date</th>
+<th>Slot</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for booking in bookings %}
+
+<tr>
+<td>{{ booking.bench.name }}</td>
+<td>{{ booking.bench.IPN_VARIANT }}</td>
+<td>{{ booking.user.username }}</td>
+<td>{{ booking.date }}</td>
+<td>{{ booking.slot }}</td>
+
+<td>
+
+{% if booking.status == "running" %}
+<span class="badge bg-success">Running</span>
+
+{% elif booking.status == "upcoming" %}
+<span class="badge bg-primary">Upcoming</span>
+
+{% elif booking.status == "completed" %}
+<span class="badge bg-secondary">Completed</span>
+
+{% elif booking.status == "cancelled" %}
+<span class="badge bg-danger">Cancelled</span>
+
+{% elif booking.status == "missed" %}
+<span class="badge bg-warning text-dark">Missed</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+<td colspan="6">No bookings found</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endblock %}

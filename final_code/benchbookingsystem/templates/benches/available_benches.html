@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-4">
+
+  <!-- Page Header -->
+  <div class="mb-4">
+    <h2 class="text-primary">📋 Bench Availability</h2>
+    <p class="fs-5">
+      <strong>Date:</strong> {{ date }} <br>
+      <strong>Time:</strong> {{ start }} - {{ end }}
+    </p>
+  </div>
+
+  <!-- AVAILABLE BENCHES -->
+  <div class="mb-5">
+    <h3 class="text-success">✅ Available Benches</h3>
+
+    {% if benches %}
+      <table class="table table-hover table-striped table-bordered align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">Bench</th>
+            <th scope="col">IPN_VARIANT</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for bench in benches %}
+            <tr>
+              <td>{{ bench.name }}</td>
+              <td>{{ bench.IPN_VARIANT }}</td>
+              <td>
+                <a href="{% url 'book_ticket' bench.id %}?date={{ date }}&start={{ start }}&end={{ end }}" 
+                   class="btn btn-success btn-sm">
+                  📅 Book
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="alert alert-warning d-flex align-items-center" role="alert">
+        ⚠️ No benches available for the selected time.
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- UPCOMING BENCHES (will be free soon) -->
+  {% if upcoming_benches %}
+    <div class="mb-4">
+      <h3 class="text-info">⏱️ Upcoming Benches</h3>
+      <table class="table table-hover table-bordered align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">Bench</th>
+            <th scope="col">Start Time</th>
+            <th scope="col">End Time</th>
+            <th scope="col">Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in upcoming_benches %}
+            <tr>
+              <td>{{ item.bench.name }}</td>
+              <td>{{ item.start }}</td>
+              <td>{{ item.end }}</td>
+              <td>Will be available soon</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+
+  <!-- BOOKED BENCHES -->
+  {% if booked_benches %}
+    <div class="mb-4">
+      <h3 class="text-danger">🛑 Currently Booked Benches</h3>
+      <table class="table table-hover table-bordered align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">Bench</th>
+            <th scope="col">User</th>
+            <th scope="col">Start Time</th>
+            <th scope="col">End Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for booking in booked_benches %}
+            <tr>
+              <td>{{ booking.bench.name }}</td>
+              <td>{{ booking.user }}</td>
+              <td>{{ booking.start }}</td>
+              <td>{{ booking.end }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

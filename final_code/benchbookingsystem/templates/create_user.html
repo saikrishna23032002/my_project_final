@@ -1,0 +1,61 @@
+
+{% extends 'base.html' %}
+{% if error %}
+<div class="alert alert-danger">
+    {{ error }}
+</div>
+{% endif %}
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+
+<div class="card shadow p-4" style="width:450px;">
+
+<h3 class="text-center mb-4">Signup</h3>
+
+<form method="post">
+
+{% csrf_token %}
+
+<div class="mb-3">
+<label class="form-label">Username</label>
+<input type="text" name="username" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Email</label>
+<input type="email" name="email" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Password</label>
+<input type="password" name="password" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Role</label>
+<select name="role" class="form-select">
+        <option value="" selected disabled>Select Role</option>
+<option value="manager">Manager</option>
+<option value="vendor_1">Vendor 1</option>
+<option value="vendor_2">Vendor 2</option>
+<option value="vendor_3">Vendor 3</option>
+
+</select>
+</div>
+
+<div class="d-grid">
+<button class="btn btn-success">Create</button>
+</div>
+
+</form>
+
+
+
+</div>
+
+</div>
+
+{% endblock %}

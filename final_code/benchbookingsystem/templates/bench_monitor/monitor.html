@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <h3 class="mb-4 text-success">📝 Test Bench Reserved</h3>
+
+      <p><strong>👤 User:</strong> {{ booking.user.username }}</p>
+      <p><strong>🏛️ Bench:</strong> {{ booking.bench.name }}</p>
+      <p><strong>🕒 Slot:</strong> {{ booking.slot.start_time|time:"h:i A" }} - {{ booking.slot.end_time|time:"h:i A" }}</p>
+      <p><strong>Status:</strong>
+        {% if booking.status == "upcoming" %}
+          <span class="badge bg-warning">Upcoming</span>
+        {% elif booking.status == "running" %}
+          <span class="badge bg-success">Progress🔄</span>
+        {% elif booking.status == "completed" %}
+          <span class="badge bg-secondary">Completed ✅</span>
+        {% elif booking.status == "cancelled" %}
+          <span class="badge bg-danger">Cancelled ❌</span>
+        {% endif %}
+      </p>
+
+      <p><strong>🟢 Connected At:</strong>
+        {% if booking.last_activity %}
+          {{ booking.last_activity|date:"d M Y, h:i A" }}
+        {% else %}
+          Not Connected Yet
+        {% endif %}
+      </p>
+
+      <p class="text-muted small">
+        🔍 System will automatically release the bench if you become inactive for more than 1 minute.
+      </p>
+
+      <div class="mt-4">
+        <a href="{% url 'disconnect_bench' booking.id %}" class="btn btn-danger me-2">🔒 Disconnect</a>
+        <a href="{% url 'my_bookings' %}" class="btn btn-secondary">💼 Back to My Bookings</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function heartbeat(){
+    fetch("/monitor/heartbeat/{{ booking.id }}/", {
+      method: "POST",
+      headers: { "X-CSRFToken": "{{ csrf_token }}" }
+    });
+  }
+
+  setInterval(heartbeat, 60000); // every 1 minute
+</script>
+
+{% endblock %}

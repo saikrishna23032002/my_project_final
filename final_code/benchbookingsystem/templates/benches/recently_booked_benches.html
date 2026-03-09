@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <h3 class="mb-4">🛋 Recently Booked Benches</h3>
+
+    {% if recently_booked %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>Bench</th>
+                    <th>IPN Variant</th>
+                    <th>Last User</th>
+                    <th>Booking Date</th>
+                    <th>Slot Start</th>
+                    <th>Slot End</th>
+                    <th>Actual Start</th>
+                    <th>Actual End</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in recently_booked %}
+                <tr>
+                    <td>{{ booking.bench.name }}</td>
+                    <td>{{ booking.bench.IPN_VARIANT }}</td>
+                    <td>{{ booking.last_user }}</td>
+                    <td>{{ booking.last_booking_date }}</td>
+                    <td>{{ booking.slot_start }}</td>
+                    <td>{{ booking.slot_end }}</td>
+                    <td>{{ booking.actual_start }}</td>
+                    <td>{{ booking.actual_end }}</td>
+                    <td>{{ booking.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">No recent bookings found.</div>
+    {% endif %}
+
+</div>
+{% endblock %}

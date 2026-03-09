@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3>Benches</h3>
+
+<div class="row">
+
+{% for bench in benches %}
+
+<div class="col-md-3">
+
+<div class="card mb-3 text-center">
+
+<div class="card-body">
+
+<h5>{{ bench.name }}</h5>
+
+<p>Category {{ bench.category }}</p>
+
+<a href="{% url 'bench_booking' bench.id %}" class="btn btn-primary">
+Book
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}
